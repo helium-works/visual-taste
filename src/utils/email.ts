@@ -26,24 +26,7 @@ export interface FormAnswers {
 export async function sendFormEmail(answers: FormAnswers): Promise<void> {
   const templateParams = {
     client_name: answers.clientName,
-    timestamp: answers.timestamp,
-    font: answers.font,
-    primary_color: `#${answers.primary}`,
-    secondary_color: `#${answers.secondary}`,
-    language: answers.language,
-    personality: answers.personality.join(', '),
-    corner_radius: answers.cornerRadius,
-    shadow_depth: answers.shadowDepth,
-    button_style: answers.buttonStyle,
-    layout_density: answers.layoutDensity === 0 ? 'Spacious' : answers.layoutDensity === 1 ? 'Balanced' : 'Dense',
-    hero_style: answers.heroStyle,
-    imagery_style: answers.imageryStyle,
-    navigation_style: answers.navigationStyle,
-    animation_level: answers.animationLevel,
-    color_mode: answers.colorMode,
-    websites_admire: answers.websitesAdmire.filter(Boolean).join('\n') || 'None provided',
-    websites_dislike: answers.websitesDislike.filter(Boolean).join('\n') || 'None provided',
-    notes: answers.notes || 'None',
+    message: answersToText(answers),
   }
 
   await emailjs.send(
