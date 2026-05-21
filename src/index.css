@@ -1,0 +1,362 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Google Fonts fallback (loaded via HTML head) ─── */
+
+/* ─── Brand CSS variables (defaults — overridden by useBrandStyles) ─── */
+:root {
+  --color-primary: #121012;
+  --color-secondary: #c6e6c0;
+  --color-primary-light: rgba(18, 16, 18, 0.10);
+  --color-primary-dark: #000000;
+  --font-brand: 'DM Sans', sans-serif;
+
+  /* Helium design system */
+  --color-ink: #121012;
+  --color-bg: #ffffff;
+  --color-bg-soft: #f6f5f1;
+  --color-mute-strong: rgba(18, 16, 18, 0.78);
+  --color-mute: rgba(18, 16, 18, 0.56);
+  --color-rule: rgba(18, 16, 18, 0.10);
+  --color-rule-strong: rgba(18, 16, 18, 0.18);
+
+  --color-mint: #c6e6c0;
+  --color-yellow: #fff1a3;
+  --color-pink: #ffb8c7;
+  --color-coral: #ff8a94;
+  --color-sky: #bfd9ff;
+  --color-lavender: #dcc7ff;
+
+  --shadow-card: 0 1px 4px rgba(18,16,18,0.07), 0 2px 12px rgba(18,16,18,0.05);
+  --shadow-card-hover: 0 4px 20px rgba(18,16,18,0.12), 0 1px 4px rgba(18,16,18,0.06);
+  --ease-house: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  /* Corner radius options */
+  --radius-sharp: 0px;
+  --radius-soft: 8px;
+  --radius-rounded: 16px;
+  --radius-pill: 9999px;
+  --radius-card: 20px;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-ink);
+  background: var(--color-bg-soft);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─── Subtle noise texture overlay (signature detail) ─── */
+.noise-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-rule); border-radius: 3px; }
+
+/* ─── Selection ─── */
+::selection {
+  background: var(--color-coral);
+  color: var(--color-ink);
+}
+
+/* ─── Typography helpers ─── */
+.font-brand {
+  font-family: var(--font-brand);
+}
+
+.italic-warmth {
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ─── Progress bar ─── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--color-primary);
+  transition: width 0.4s var(--ease-house);
+  z-index: 100;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ─── Selectable card states ─── */
+.selectable-card {
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-house), box-shadow 0.2s var(--ease-house), border-color 0.15s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+.selectable-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+.selectable-card.selected {
+  border-color: var(--color-primary);
+  transform: scale(1.02);
+  box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-card-hover);
+}
+
+/* ─── Step transitions ─── */
+.step-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.step-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s var(--ease-house), transform 0.4s var(--ease-house);
+}
+.step-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.step-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ─── Admin page ─── */
+.admin-bg {
+  background: #0e0e10;
+  color: #e8e6e3;
+  min-height: 100vh;
+}
+
+/* ─── Brand button ─── */
+.btn-brand {
+  background: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-soft);
+  font-family: var(--font-brand);
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s var(--ease-house);
+}
+.btn-brand:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+.btn-brand:active {
+  transform: scale(0.98);
+}
+
+/* ─── Ghost / outline buttons ─── */
+.btn-outline {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-soft);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.btn-outline:hover {
+  border-color: var(--color-ink);
+  background: rgba(18,16,18,0.04);
+}
+
+/* ─── Form inputs ─── */
+.input-brand {
+  border: 1px solid var(--color-rule);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--color-ink);
+  background: rgba(255,255,255,0.85);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.input-brand:focus {
+  border-color: var(--color-primary);
+}
+.input-brand::placeholder {
+  color: var(--color-mute);
+}
+
+/* ─── Textarea ─── */
+textarea.input-brand {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ─── Language toggle ─── */
+.lang-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--color-rule);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease;
+}
+.lang-toggle:hover {
+  border-color: var(--color-ink);
+}
+
+/* ─── Diagonal accent (signature detail) ─── */
+.diagonal-accent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.diagonal-accent::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 120px;
+  height: 120px;
+  background: var(--color-primary-light);
+  transform: rotate(45deg);
+  border-radius: 4px;
+}
+
+/* ─── Skeleton loading ─── */
+.skeleton {
+  background: var(--color-rule);
+  border-radius: 6px;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* ─── Admin dark inputs ─── */
+.admin-input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: 'DM Mono', monospace;
+  color: #e8e6e3;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.admin-input:focus {
+  border-color: rgba(255,255,255,0.35);
+}
+.admin-input::placeholder {
+  color: rgba(232,230,227,0.35);
+}
+
+/* ─── URL output field ─── */
+.url-field {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-family: 'DM Mono', monospace;
+  color: var(--color-mint);
+  width: 100%;
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+/* ─── Color swatches ─── */
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.15);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* ─── Step card shell ─── */
+.step-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 24px;
+  border: 1px solid var(--color-rule);
+  box-shadow: var(--shadow-card);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+@media (max-width: 640px) {
+  .step-card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+}
+
+/* ─── Back/Next nav bar ─── */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 0;
+  gap: 12px;
+}
+
+/* ─── Checkmark animation ─── */
+@keyframes checkDraw {
+  to { stroke-dashoffset: 0; }
+}
+.check-path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: checkDraw 0.6s var(--ease-house) 0.2s forwards;
+}
+
+/* ─── Admin glass card ─── */
+.admin-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  padding: 28px;
+}
