@@ -3,11 +3,13 @@ import { LanguageProvider } from './context/LanguageContext'
 import { FormProvider } from './context/FormContext'
 import AdminPage from './pages/AdminPage'
 import ClientForm from './pages/ClientForm'
+import PromptGeneratorPage from './pages/PromptGeneratorPage'
 
 export default function App() {
   return (
     <HashRouter>
       <Routes>
+        <Route path="/admin/prompt" element={<PromptGeneratorPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/*" element={
           <LanguageProvider>

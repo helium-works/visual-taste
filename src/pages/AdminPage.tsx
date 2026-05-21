@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import ColorPicker from '../components/ColorPicker'
 import FontPicker from '../components/FontPicker'
 import LivePreview from '../components/LivePreview'
@@ -63,6 +64,14 @@ export default function AdminPage() {
           Design Taste — Admin
         </span>
         <div style={{ flex: 1 }} />
+        <Link
+          to="/admin/prompt"
+          style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(232,230,227,0.4)', textDecoration: 'none', padding: '6px 12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, transition: 'border-color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)')}
+          onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+        >
+          Prompt generator →
+        </Link>
         <a
           href="#/"
           style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(232,230,227,0.4)', textDecoration: 'none', padding: '6px 12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, transition: 'border-color 0.2s' }}
