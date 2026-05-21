@@ -193,7 +193,7 @@ export function buildDesignPrompt(answers: FormAnswers, wireframeHtml?: string):
       'The following HTML is the structural wireframe. **Keep this DOM structure.** Re-skin it with the design language documented above.',
       '',
       '```html',
-      wireframeHtml.trim(),
+      wireframeHtml.trim().replace(/```/g, '\\`\\`\\`'),
       '```',
     ].join('\n')))
   } else {

@@ -89,9 +89,17 @@ export default function AdminPage() {
             <h1 style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 28, fontWeight: 400, letterSpacing: '-0.025em', color: '#e8e6e3', margin: '0 0 6px' }}>
               Configure <em style={{ fontStyle: 'italic', fontWeight: 300 }}>client link</em>
             </h1>
-            <p style={{ fontSize: 13, color: 'rgba(232,230,227,0.45)', margin: 0, fontFamily: 'DM Mono, monospace', letterSpacing: '0.04em' }}>
+            <p style={{ fontSize: 13, color: 'rgba(232,230,227,0.45)', margin: '0 0 16px', fontFamily: 'DM Mono, monospace', letterSpacing: '0.04em' }}>
               Fill in the brand details. Share the generated URL.
             </p>
+            <Link
+              to="/admin/prompt"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'DM Mono, monospace', fontSize: 11, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#0e0d0e', background: '#c6e6c0', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, fontWeight: 500, transition: 'opacity 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+            >
+              Open prompt generator →
+            </Link>
           </div>
 
           {/* Client name */}

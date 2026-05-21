@@ -34,7 +34,7 @@ http://localhost:5173/#/?font=DM+Sans&primary=FF6B6B&secondary=00C9A7&client=Tes
 **Never commit real credentials.** The EmailJS keys live in `.env.local` (gitignored via `*.local`).
 
 ```bash
-cp .env.example .env.local   # then fill in the three values
+cp .env.example .env.local   # then fill in the values
 ```
 
 The config reads from env vars:
@@ -48,6 +48,13 @@ export const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY  ?? '
 If the keys are empty, the submit button will still work but EmailJS will reject the call — the error UI with clipboard fallback will appear.
 
 > **Note on EmailJS public key:** EmailJS's "public key" is intentionally client-exposed (it's how the service works). The service ID and template ID are also client-side identifiers. The main risk is someone sending spam through your account — protect against this in the EmailJS dashboard by restricting allowed domains.
+
+**Admin passphrase** (`VITE_ADMIN_PASSPHRASE_HASH`): SHA-256 hex digest of the passphrase that protects `/#/admin` and `/#/admin/prompt`. If unset, those routes show a blank 404. Generate:
+
+```bash
+echo -n 'your-passphrase' | shasum -a 256
+# copy the hex string (without the trailing " -") into .env.local
+```
 
 ---
 

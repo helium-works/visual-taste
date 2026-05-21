@@ -9,6 +9,9 @@ export interface BrandParams {
   missingParams: string[]
 }
 
+const isHex = (s: string) => /^[0-9a-f]{3}([0-9a-f]{3})?$/i.test(s)
+const isFontName = (s: string) => /^[A-Za-z0-9 +\-]{1,50}$/.test(s)
+
 export function useUrlParams(): BrandParams {
   return useMemo(() => {
     const params = new URLSearchParams(window.location.search)
@@ -22,10 +25,15 @@ export function useUrlParams(): BrandParams {
 
     const p = new URLSearchParams(searchString.replace(/^\?/, ''))
 
-    const font = params.get('font') || p.get('font') || ''
-    const primary = params.get('primary') || p.get('primary') || ''
-    const secondary = params.get('secondary') || p.get('secondary') || ''
-    const client = params.get('client') || p.get('client') || ''
+    const rawFont = params.get('font') || p.get('font') || ''
+    const rawPrimary = params.get('primary') || p.get('primary') || ''
+    const rawSecondary = params.get('secondary') || p.get('secondary') || ''
+    const rawClient = params.get('client') || p.get('client') || ''
+
+    const font = isFontName(rawFont) ? rawFont : ''
+    const primary = isHex(rawPrimary.replace('#', '')) ? rawPrimary.replace('#', '') : ''
+    const secondary = isHex(rawSecondary.replace('#', '')) ? rawSecondary.replace('#', '') : ''
+    const client = rawClient.slice(0, 100)
 
     const missingParams: string[] = []
     if (!font) missingParams.push('font')
