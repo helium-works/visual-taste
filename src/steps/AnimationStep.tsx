@@ -121,7 +121,7 @@ export default function AnimationStep({ onNext, onBack }: AnimationStepProps) {
       </p>
 
       {/* Option buttons */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
         {ANIM_OPTIONS.map(({ id, labelKey, subKey }) => (
           <button
             key={id}

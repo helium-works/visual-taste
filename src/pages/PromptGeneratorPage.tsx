@@ -54,7 +54,7 @@ export default function PromptGeneratorPage() {
   return (
     <div className="admin-bg" style={{ fontFamily: 'DM Sans, sans-serif', minHeight: '100vh' }}>
       {/* Header */}
-      <div style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '20px 32px', display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div className="admin-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '20px 32px', display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#c6e6c0' }} />
         <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(232,230,227,0.5)' }}>
           Helium

@@ -172,7 +172,7 @@ export default function ClientForm() {
 
       {/* Step counter */}
       {showProgress && (
-        <div style={{
+        <div className="step-counter" style={{
           position: 'fixed',
           top: 20,
           left: '50%',

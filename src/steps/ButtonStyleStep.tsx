@@ -112,7 +112,7 @@ export default function ButtonStyleStep({ onNext, onBack }: ButtonStyleStepProps
         {t('buttonSubtext')}
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 14 }}>
         {BUTTON_OPTIONS.map(({ id, labelKey, Component }) => (
           <SelectableCard
             key={id}

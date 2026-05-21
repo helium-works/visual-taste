@@ -52,7 +52,7 @@ export default function AdminPage() {
   return (
     <div className="admin-bg" style={{ fontFamily: 'DM Sans, sans-serif', minHeight: '100vh' }}>
       {/* Header */}
-      <div style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '20px 32px', display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div className="admin-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '20px 32px', display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#c6e6c0' }} />
         <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(232,230,227,0.5)' }}>
           Helium
@@ -82,7 +82,7 @@ export default function AdminPage() {
         </a>
       </div>
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}>
+      <div className="admin-grid" style={{ maxWidth: 900, margin: '0 auto', padding: '40px 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}>
         {/* Left column — config */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
           <div>
@@ -94,7 +94,7 @@ export default function AdminPage() {
             </p>
             <Link
               to="/admin/prompt"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'DM Mono, monospace', fontSize: 11, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#0e0d0e', background: '#c6e6c0', textDecoration: 'none', padding: '8px 16px', borderRadius: 8, fontWeight: 500, transition: 'opacity 0.15s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'DM Mono, monospace', fontSize: 12, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#0e0d0e', background: '#c6e6c0', textDecoration: 'none', padding: '12px 18px', borderRadius: 8, fontWeight: 500, transition: 'opacity 0.15s', minHeight: 44 }}
               onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
               onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
             >
@@ -145,7 +145,7 @@ export default function AdminPage() {
         </div>
 
         {/* Right column — output + preview */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, position: 'sticky', top: 40 }}>
+        <div className="admin-sticky-col" style={{ display: 'flex', flexDirection: 'column', gap: 24, position: 'sticky', top: 40 }}>
           {/* Generated URL */}
           <div className="admin-card">
             <div style={{ fontSize: 11, fontFamily: 'DM Mono, monospace', letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(232,230,227,0.55)', marginBottom: 14 }}>

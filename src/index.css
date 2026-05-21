@@ -360,3 +360,73 @@ textarea.input-brand {
   border-radius: 16px;
   padding: 28px;
 }
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE — touch-friendly overrides
+   ═══════════════════════════════════════════════════════ */
+
+/* Safe-area: fixed chrome clears notch / Dynamic Island in landscape */
+.lang-toggle,
+.step-counter {
+  top: max(20px, env(safe-area-inset-top));
+}
+
+@media (max-width: 640px) {
+  /* iOS Safari: font ≥16px prevents auto-zoom on input focus */
+  input,
+  textarea,
+  select {
+    font-size: max(1em, 16px);
+  }
+
+  /* Language toggle — larger tap target, tighter to edge */
+  .lang-toggle {
+    min-height: 40px;
+    padding: 10px 14px;
+    right: 12px;
+  }
+
+  /* Step nav — both buttons fill the row, min 48px tall */
+  .step-nav > * {
+    flex: 1;
+    min-height: 48px;
+  }
+
+  /* Review edit buttons — tappable area */
+  .edit-btn {
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    min-height: 36px;
+    border-radius: 6px !important;
+  }
+
+  /* Review section header — stack label above edit button on narrow screens */
+  .review-section-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+
+  /* Admin/PromptGen header — wrap chips when narrow */
+  .admin-header {
+    flex-wrap: wrap !important;
+    row-gap: 8px;
+    padding: 16px !important;
+  }
+
+  /* Admin grid — single column, tighter padding */
+  .admin-grid {
+    grid-template-columns: 1fr !important;
+    padding: 24px 16px !important;
+  }
+
+  /* Disable sticky on the right column once it flows below */
+  .admin-sticky-col {
+    position: static !important;
+  }
+
+  /* Admin card — tighter padding on phone */
+  .admin-card {
+    padding: 20px 16px;
+  }
+}

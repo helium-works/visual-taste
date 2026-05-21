@@ -16,11 +16,12 @@ interface ReviewStepProps {
 function Section({ label, children, onEdit }: { label: string; children: React.ReactNode; onEdit: () => void; step?: number }) {
   return (
     <div style={{ paddingBottom: 20, borderBottom: '1px solid var(--color-rule)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
+      <div className="review-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
         <span style={{ fontSize: 11, fontFamily: 'DM Mono, monospace', letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--color-mute)' }}>
           {label}
         </span>
         <button
+          className="edit-btn"
           onClick={onEdit}
           style={{ fontSize: 11, fontFamily: 'DM Mono, monospace', color: 'var(--color-primary)', background: 'none', border: 'none', cursor: 'pointer', letterSpacing: '0.04em', padding: '2px 6px', borderRadius: 4, transition: 'background 0.15s', flexShrink: 0 }}
           onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-primary-light)')}
@@ -258,7 +259,7 @@ export default function ReviewStep({ onBack, clientName, font, primary, secondar
         <Section label={t('reviewAdmire')} onEdit={() => onGoToStep(12)} step={12}>
           {form.websitesAdmire.filter(Boolean).length > 0
             ? form.websitesAdmire.filter(Boolean).map((url, i) => (
-                <div key={i} style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'var(--color-primary)', marginBottom: 4 }}>{url}</div>
+                <div key={i} style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'var(--color-primary)', marginBottom: 4, wordBreak: 'break-all' }}>{url}</div>
               ))
             : <span style={{ fontSize: 13, color: 'var(--color-mute)' }}>{t('reviewSkipped')}</span>}
         </Section>
@@ -266,7 +267,7 @@ export default function ReviewStep({ onBack, clientName, font, primary, secondar
         <Section label={t('reviewDislike')} onEdit={() => onGoToStep(13)} step={13}>
           {form.websitesDislike.filter(Boolean).length > 0
             ? form.websitesDislike.filter(Boolean).map((url, i) => (
-                <div key={i} style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'rgba(18,16,18,0.6)', marginBottom: 4 }}>{url}</div>
+                <div key={i} style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'rgba(18,16,18,0.6)', marginBottom: 4, wordBreak: 'break-all' }}>{url}</div>
               ))
             : <span style={{ fontSize: 13, color: 'var(--color-mute)' }}>{t('reviewSkipped')}</span>}
         </Section>

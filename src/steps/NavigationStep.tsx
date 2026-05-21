@@ -102,7 +102,7 @@ export default function NavigationStep({ onNext, onBack }: NavigationStepProps) 
       <p style={{ fontSize: 14, color: 'var(--color-mute)', marginBottom: 28 }}>
         {t('navSubtext')}
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 14 }}>
         {NAV_OPTIONS.map(({ id, labelKey, Preview }) => (
           <SelectableCard
             key={id}

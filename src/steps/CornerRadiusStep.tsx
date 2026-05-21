@@ -60,7 +60,7 @@ export default function CornerRadiusStep({ onNext, onBack }: CornerRadiusStepPro
         {t('cornerSubtext')}
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 14 }}>
         {RADIUS_OPTIONS.map(({ id, px, labelKey, subKey }) => (
           <SelectableCard
             key={id}
