@@ -11,8 +11,8 @@ export interface FormState {
   navigationStyle: string
   animationLevel: string
   colorMode: string
-  websitesAdmire: string[]
-  websitesDislike: string[]
+  websitesAdmire: { url: string; note: string }[]
+  websitesDislike: { url: string; note: string }[]
   notes: string
 }
 
@@ -27,8 +27,8 @@ const defaultState: FormState = {
   navigationStyle: '',
   animationLevel: '',
   colorMode: '',
-  websitesAdmire: ['', '', ''],
-  websitesDislike: ['', '', ''],
+  websitesAdmire: [{ url: '', note: '' }, { url: '', note: '' }, { url: '', note: '' }],
+  websitesDislike: [{ url: '', note: '' }, { url: '', note: '' }, { url: '', note: '' }],
   notes: '',
 }
 

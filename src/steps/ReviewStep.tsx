@@ -257,17 +257,23 @@ export default function ReviewStep({ onBack, clientName, font, primary, secondar
         </Section>
 
         <Section label={t('reviewAdmire')} onEdit={() => onGoToStep(12)} step={12}>
-          {form.websitesAdmire.filter(Boolean).length > 0
-            ? form.websitesAdmire.filter(Boolean).map((url, i) => (
-                <div key={i} style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'var(--color-primary)', marginBottom: 4, wordBreak: 'break-all' }}>{url}</div>
+          {form.websitesAdmire.filter(x => x.url.trim()).length > 0
+            ? form.websitesAdmire.filter(x => x.url.trim()).map((item, i) => (
+                <div key={i} style={{ marginBottom: 6, wordBreak: 'break-all' }}>
+                  <span style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'var(--color-primary)' }}>{item.url}</span>
+                  {item.note && <span style={{ fontSize: 12, fontFamily: 'DM Sans, sans-serif', color: 'var(--color-mute)' }}> — {item.note}</span>}
+                </div>
               ))
             : <span style={{ fontSize: 13, color: 'var(--color-mute)' }}>{t('reviewSkipped')}</span>}
         </Section>
 
         <Section label={t('reviewDislike')} onEdit={() => onGoToStep(13)} step={13}>
-          {form.websitesDislike.filter(Boolean).length > 0
-            ? form.websitesDislike.filter(Boolean).map((url, i) => (
-                <div key={i} style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'rgba(18,16,18,0.6)', marginBottom: 4, wordBreak: 'break-all' }}>{url}</div>
+          {form.websitesDislike.filter(x => x.url.trim()).length > 0
+            ? form.websitesDislike.filter(x => x.url.trim()).map((item, i) => (
+                <div key={i} style={{ marginBottom: 6, wordBreak: 'break-all' }}>
+                  <span style={{ fontSize: 13, fontFamily: 'DM Mono, monospace', color: 'rgba(18,16,18,0.6)' }}>{item.url}</span>
+                  {item.note && <span style={{ fontSize: 12, fontFamily: 'DM Sans, sans-serif', color: 'var(--color-mute)' }}> — {item.note}</span>}
+                </div>
               ))
             : <span style={{ fontSize: 13, color: 'var(--color-mute)' }}>{t('reviewSkipped')}</span>}
         </Section>

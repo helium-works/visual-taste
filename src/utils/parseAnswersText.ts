@@ -15,17 +15,51 @@ function answerLine(text: string, n: number): string {
 
 const NONE_PATTERN = /^(none|none provided|skipped|n\/a)$/i
 
-function parseUrls(raw: string): string[] {
-  if (!raw || NONE_PATTERN.test(raw)) return ['', '', '']
-  const urls = raw.split(',').map(s => s.trim()).filter(Boolean)
-  return [urls[0] || '', urls[1] || '', urls[2] || '']
+const EMPTY_ENTRY = { url: '', note: '' }
+const EMPTY_3 = [{ ...EMPTY_ENTRY }, { ...EMPTY_ENTRY }, { ...EMPTY_ENTRY }]
+
+function parseUrlBlock(text: string, n: number): { url: string; note: string }[] {
+  // Capture everything after "N. Label:" up to the next numbered line or end
+  const blockRe = new RegExp(`^${n}\\.\\s+[^:]+:[\\s\\S]*?(?=^\\d+\\.|$)`, 'm')
+  const block = text.match(blockRe)?.[0] ?? ''
+
+  // Strip the "N. Label:" header line
+  const headerRe = new RegExp(`^${n}\\.\\s+[^:]+:\\s*`)
+  const body = block.replace(headerRe, '').trim()
+
+  if (!body || NONE_PATTERN.test(body)) return [...EMPTY_3]
+
+  let items: { url: string; note: string }[] = []
+
+  // Multi-line format: each line starts with optional bullet/number
+  const lines = body.split('\n').map(l => l.trim()).filter(Boolean)
+
+  if (lines.length > 1 || lines[0]?.startsWith('-') || lines[0]?.startsWith('•')) {
+    // New multi-line format
+    items = lines
+      .map(l => l.replace(/^[-•]\s*/, '').replace(/^\d+[).]\s*/, '').trim())
+      .filter(Boolean)
+      .map(l => {
+        const sep = l.indexOf(' — ')
+        return sep !== -1
+          ? { url: l.slice(0, sep).trim(), note: l.slice(sep + 3).trim() }
+          : { url: l.trim(), note: '' }
+      })
+  } else {
+    // Legacy one-line comma-separated format (backward compat)
+    items = body.split(',').map(s => s.trim()).filter(Boolean).map(url => ({ url, note: '' }))
+  }
+
+  // Pad / trim to exactly 3 entries
+  while (items.length < 3) items.push({ ...EMPTY_ENTRY })
+  return items.slice(0, 3)
 }
 
 function parseDensity(raw: string): number {
   const lower = raw.toLowerCase()
   if (lower.includes('spacious')) return 0
   if (lower.includes('dense')) return 2
-  return 1 // balanced
+  return 1
 }
 
 function parsePersonality(raw: string): string[] {
@@ -56,8 +90,8 @@ export function parseAnswersText(text: string): ParseResult {
     navigationStyle: '',
     animationLevel: '',
     colorMode: '',
-    websitesAdmire: ['', '', ''],
-    websitesDislike: ['', '', ''],
+    websitesAdmire: [...EMPTY_3],
+    websitesDislike: [...EMPTY_3],
     notes: '',
     timestamp: '',
     parseCount: 0,
@@ -76,7 +110,6 @@ export function parseAnswersText(text: string): ParseResult {
   const lang = line(text, 'Language')
   if (lang) { answers.language = lang === 'es' ? 'es' : 'en'; count++ }
 
-  // Brand section
   const font = line(text, 'Font')
   if (font) { answers.font = font.replace(/\+/g, ' '); count++ }
 
@@ -86,7 +119,6 @@ export function parseAnswersText(text: string): ParseResult {
   const secondary = line(text, 'Secondary Color')
   if (secondary) { answers.secondary = secondary.replace('#', ''); count++ }
 
-  // Answers section (numbered lines)
   const personality = answerLine(text, 1)
   if (personality) { answers.personality = parsePersonality(personality); count++ }
 
@@ -117,11 +149,11 @@ export function parseAnswersText(text: string): ParseResult {
   const colorMode = answerLine(text, 10)
   if (colorMode) { answers.colorMode = colorMode.toLowerCase(); count++ }
 
-  const admire = answerLine(text, 11)
-  if (admire) { answers.websitesAdmire = parseUrls(admire); count++ }
+  const admire = parseUrlBlock(text, 11)
+  if (admire.some(x => x.url)) { answers.websitesAdmire = admire; count++ }
 
-  const dislike = answerLine(text, 12)
-  if (dislike) { answers.websitesDislike = parseUrls(dislike); count++ }
+  const dislike = parseUrlBlock(text, 12)
+  if (dislike.some(x => x.url)) { answers.websitesDislike = dislike; count++ }
 
   const notes = answerLine(text, 13)
   if (notes && !NONE_PATTERN.test(notes)) { answers.notes = notes; count++ }

@@ -46,8 +46,8 @@ export function buildDesignPrompt(answers: FormAnswers, wireframeHtml?: string):
   const nav = get(NAVIGATION_STYLE, answers.navigationStyle, NAVIGATION_STYLE['topbar'])
 
   // Admired / disliked sites
-  const admiredUrls = (answers.websitesAdmire || []).filter(Boolean)
-  const dislikedUrls = (answers.websitesDislike || []).filter(Boolean)
+  const admired = (answers.websitesAdmire || []).filter(x => x?.url?.trim())
+  const disliked = (answers.websitesDislike || []).filter(x => x?.url?.trim())
 
   const lines: string[] = []
 
@@ -148,16 +148,16 @@ export function buildDesignPrompt(answers: FormAnswers, wireframeHtml?: string):
   ].filter(s => s !== '').join('\n')))
 
   // ── Reference sites ──────────────────────────────────────────────────────
-  if (admiredUrls.length > 0 || dislikedUrls.length > 0) {
+  if (admired.length > 0 || disliked.length > 0) {
     const refLines: string[] = []
-    if (admiredUrls.length > 0) {
+    if (admired.length > 0) {
       refLines.push('**Draw inspiration from these sites** (the client specifically called them out as design references):')
-      admiredUrls.forEach(url => refLines.push(`- ${url}`))
+      admired.forEach(({ url, note }) => refLines.push(note ? `- ${url} — *${note}*` : `- ${url}`))
     }
-    if (dislikedUrls.length > 0) {
+    if (disliked.length > 0) {
       refLines.push('')
       refLines.push('**Explicitly avoid the aesthetic of these sites** (the client flagged them as design anti-references):')
-      dislikedUrls.forEach(url => refLines.push(`- ${url}`))
+      disliked.forEach(({ url, note }) => refLines.push(note ? `- ${url} — *${note}*` : `- ${url}`))
     }
     lines.push(section('Reference Sites', refLines.join('\n')))
   }

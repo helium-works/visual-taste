@@ -17,8 +17,8 @@ export interface FormAnswers {
   navigationStyle: string
   animationLevel: string
   colorMode: string
-  websitesAdmire: string[]
-  websitesDislike: string[]
+  websitesAdmire: { url: string; note: string }[]
+  websitesDislike: { url: string; note: string }[]
   notes: string
   timestamp: string
 }
@@ -60,8 +60,10 @@ ANSWERS
 8. Navigation Style: ${answers.navigationStyle}
 9. Animation Level: ${answers.animationLevel}
 10. Color Mode: ${answers.colorMode}
-11. Websites I Love: ${answers.websitesAdmire.filter(Boolean).join(', ') || 'None'}
-12. Websites I Dislike: ${answers.websitesDislike.filter(Boolean).join(', ') || 'None'}
+11. Websites I Love:
+${answers.websitesAdmire.filter(x => x.url).map(x => `   - ${x.url}${x.note ? ` — ${x.note}` : ''}`).join('\n') || '   None'}
+12. Websites I Dislike:
+${answers.websitesDislike.filter(x => x.url).map(x => `   - ${x.url}${x.note ? ` — ${x.note}` : ''}`).join('\n') || '   None'}
 13. Additional Notes: ${answers.notes || 'None'}
 `.trim()
 }

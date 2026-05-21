@@ -10,9 +10,9 @@ export default function WebsitesDislikeStep({ onNext, onBack }: WebsitesDislikeS
   const { t } = useLanguage()
   const { form, setField } = useForm()
 
-  const handleChange = (i: number, val: string) => {
+  const handleChange = (i: number, field: 'url' | 'note', val: string) => {
     const next = [...form.websitesDislike]
-    next[i] = val
+    next[i] = { ...next[i], [field]: val }
     setField('websitesDislike', next)
   }
 
@@ -28,18 +28,29 @@ export default function WebsitesDislikeStep({ onNext, onBack }: WebsitesDislikeS
         {t('dislikeHint')}
       </p>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {[0, 1, 2].map(i => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'var(--color-mute)', letterSpacing: '0.08em', width: 16, textAlign: 'right', flexShrink: 0 }}>{i + 1}</span>
-            <input
-              className="input-brand"
-              type="url"
-              value={form.websitesDislike[i] || ''}
-              onChange={(e) => handleChange(i, e.target.value)}
-              placeholder={t('dislikePlaceholder')}
-              style={{ fontFamily: 'DM Mono, monospace', fontSize: 14 }}
-            />
+          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <span style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'var(--color-mute)', letterSpacing: '0.08em', width: 16, textAlign: 'right', flexShrink: 0, paddingTop: 13 }}>{i + 1}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+              <input
+                className="input-brand"
+                type="url"
+                value={form.websitesDislike[i]?.url || ''}
+                onChange={(e) => handleChange(i, 'url', e.target.value)}
+                placeholder={t('dislikePlaceholder')}
+                style={{ fontFamily: 'DM Mono, monospace', fontSize: 14 }}
+              />
+              <input
+                className="input-brand"
+                type="text"
+                value={form.websitesDislike[i]?.note || ''}
+                onChange={(e) => handleChange(i, 'note', e.target.value)}
+                placeholder={t('dislikeNotePlaceholder')}
+                maxLength={200}
+                style={{ fontSize: 13, color: 'var(--color-mute-strong)', background: 'rgba(255,255,255,0.6)' }}
+              />
+            </div>
           </div>
         ))}
       </div>

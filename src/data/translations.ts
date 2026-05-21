@@ -128,12 +128,14 @@ export interface Translations {
   admireTitle: string
   admireSubtext: string
   admirePlaceholder: string
+  admireNotePlaceholder: string
 
   // Step 13 - Websites Dislike
   dislikeTitle: string
   dislikeSubtext: string
   dislikeHint: string
   dislikePlaceholder: string
+  dislikeNotePlaceholder: string
 
   // Step 14 - Notes
   notesTitle: string
@@ -310,12 +312,14 @@ const en: Translations = {
   admireTitle: 'Share up to 3 websites whose design you love',
   admireSubtext: "These help us understand what feels right to you",
   admirePlaceholder: 'https://example.com',
+  admireNotePlaceholder: 'What you love about it (hero, typography, animations…)',
 
   // Step 13 - Websites Dislike
   dislikeTitle: "Are there any websites whose design you don't like?",
   dislikeSubtext: 'Optional — skip if nothing comes to mind',
   dislikeHint: 'This helps us know what to avoid',
   dislikePlaceholder: 'https://example.com',
+  dislikeNotePlaceholder: "What doesn't work (clutter, motion, colors…)",
 
   // Step 14 - Notes
   notesTitle: 'Anything else we should know?',
@@ -492,12 +496,14 @@ const es: Translations = {
   admireTitle: 'Comparte hasta 3 sitios web cuyo diseño te encante',
   admireSubtext: 'Nos ayudan a entender qué se siente bien para ti',
   admirePlaceholder: 'https://ejemplo.com',
+  admireNotePlaceholder: 'Qué te gusta (hero, tipografía, animaciones…)',
 
   // Step 13 - Websites Dislike
   dislikeTitle: '¿Hay algún sitio web cuyo diseño NO te guste?',
   dislikeSubtext: 'Opcional — salta si no se te ocurre nada',
   dislikeHint: 'Esto nos ayuda a saber qué evitar',
   dislikePlaceholder: 'https://ejemplo.com',
+  dislikeNotePlaceholder: 'Qué no funciona (saturación, movimiento, colores…)',
 
   // Step 14 - Notes
   notesTitle: '¿Algo más que debamos saber?',
