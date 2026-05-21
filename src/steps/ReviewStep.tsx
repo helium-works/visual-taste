@@ -63,6 +63,7 @@ export default function ReviewStep({ onBack, clientName, font, primary, secondar
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState(false)
+  const [errorMsg, setErrorMsg] = useState('')
   const [copied, setCopied] = useState(false)
 
   const densityLabels = lang === 'es' ? DENSITY_LABELS_ES : DENSITY_LABELS
@@ -94,7 +95,8 @@ export default function ReviewStep({ onBack, clientName, font, primary, secondar
     try {
       await sendFormEmail(answers)
       setSubmitted(true)
-    } catch {
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : String(err))
       setError(true)
     } finally {
       setSubmitting(false)
@@ -280,7 +282,12 @@ export default function ReviewStep({ onBack, clientName, font, primary, secondar
       {error && (
         <div style={{ marginTop: 24, padding: '16px 20px', background: 'rgba(255,100,100,0.08)', border: '1px solid rgba(255,100,100,0.2)', borderRadius: 12 }}>
           <div style={{ fontSize: 14, fontWeight: 500, color: '#c0392b', marginBottom: 4 }}>{t('errorTitle')}</div>
-          <div style={{ fontSize: 13, color: 'var(--color-mute-strong)', marginBottom: 16 }}>{t('errorSubtext')}</div>
+          <div style={{ fontSize: 13, color: 'var(--color-mute-strong)', marginBottom: errorMsg ? 8 : 16 }}>{t('errorSubtext')}</div>
+          {errorMsg && (
+            <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, padding: '8px 12px', background: 'rgba(18,16,18,0.05)', borderRadius: 8, color: 'var(--color-mute-strong)', marginBottom: 16, wordBreak: 'break-all' }}>
+              {errorMsg}
+            </div>
+          )}
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <button className="btn-brand" style={{ padding: '10px 20px', fontSize: 13 }} onClick={handleSubmit}>{t('errorRetry')}</button>
             <button className="btn-outline" style={{ padding: '10px 20px', fontSize: 13 }} onClick={handleCopy}>
