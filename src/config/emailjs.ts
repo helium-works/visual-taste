@@ -1,4 +1,5 @@
-// Fill these in after setting up your EmailJS dashboard
-export const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'
-export const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'
-export const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'
+// Keys are loaded from .env.local — never commit real values here.
+// Copy .env.example → .env.local and fill in your EmailJS dashboard values.
+export const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID  ?? ''
+export const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID ?? ''
+export const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY  ?? ''
