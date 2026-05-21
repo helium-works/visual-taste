@@ -19,24 +19,34 @@ const EMPTY_ENTRY = { url: '', note: '' }
 const EMPTY_3 = [{ ...EMPTY_ENTRY }, { ...EMPTY_ENTRY }, { ...EMPTY_ENTRY }]
 
 function parseUrlBlock(text: string, n: number): { url: string; note: string }[] {
-  // Capture everything after "N. Label:" up to the next numbered line or end
-  const blockRe = new RegExp(`^${n}\\.\\s+[^:]+:[\\s\\S]*?(?=^\\d+\\.|$)`, 'm')
-  const block = text.match(blockRe)?.[0] ?? ''
+  // Split into lines and find the block between "N." header and next numbered line
+  const allLines = text.split('\n')
+  const headerRe = new RegExp(`^${n}\\.\\s+[^:]+:`)
+  const nextHeaderRe = /^\d+\.\s/
 
-  // Strip the "N. Label:" header line
-  const headerRe = new RegExp(`^${n}\\.\\s+[^:]+:\\s*`)
-  const body = block.replace(headerRe, '').trim()
+  const startIdx = allLines.findIndex(l => headerRe.test(l.trim()))
+  if (startIdx === -1) return [...EMPTY_3]
 
-  if (!body || NONE_PATTERN.test(body)) return [...EMPTY_3]
+  // Inline value on the header line (legacy: "11. Websites I Love: url1, url2")
+  const headerLine = allLines[startIdx].trim()
+  const headerMatch = headerLine.match(new RegExp(`^${n}\\.\\s+[^:]+:\\s*(.+)$`))
+  const inlineValue = headerMatch?.[1]?.trim() ?? ''
+
+  // Collect continuation lines (indented or bullet lines until next numbered entry)
+  const bodyLines: string[] = []
+  for (let i = startIdx + 1; i < allLines.length; i++) {
+    const l = allLines[i]
+    if (nextHeaderRe.test(l.trim())) break
+    bodyLines.push(l.trim())
+  }
+
+  const body = bodyLines.filter(Boolean)
 
   let items: { url: string; note: string }[] = []
 
-  // Multi-line format: each line starts with optional bullet/number
-  const lines = body.split('\n').map(l => l.trim()).filter(Boolean)
-
-  if (lines.length > 1 || lines[0]?.startsWith('-') || lines[0]?.startsWith('•')) {
-    // New multi-line format
-    items = lines
+  if (body.length > 0) {
+    // New multi-line format — parse each bullet line
+    items = body
       .map(l => l.replace(/^[-•]\s*/, '').replace(/^\d+[).]\s*/, '').trim())
       .filter(Boolean)
       .map(l => {
@@ -45,9 +55,9 @@ function parseUrlBlock(text: string, n: number): { url: string; note: string }[]
           ? { url: l.slice(0, sep).trim(), note: l.slice(sep + 3).trim() }
           : { url: l.trim(), note: '' }
       })
-  } else {
-    // Legacy one-line comma-separated format (backward compat)
-    items = body.split(',').map(s => s.trim()).filter(Boolean).map(url => ({ url, note: '' }))
+  } else if (inlineValue && !NONE_PATTERN.test(inlineValue)) {
+    // Legacy one-line comma-separated format: "11. Websites I Love: url1, url2"
+    items = inlineValue.split(',').map(s => s.trim()).filter(Boolean).map(url => ({ url, note: '' }))
   }
 
   // Pad / trim to exactly 3 entries
