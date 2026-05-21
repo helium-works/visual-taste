@@ -1,73 +1,125 @@
-# React + TypeScript + Vite
+# Design Taste 🎈
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A visual design preference capture tool for [Helium](https://helium.works) studio.
 
-Currently, two official plugins are available:
+Two sides: the **designer** configures a client's brand and generates a shareable URL. The **client** opens that URL and works through a 15-step form that renders entirely in their own font and colors — so every choice is made in context, not abstract.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Routes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| URL | Who uses it |
+|-----|-------------|
+| `/#/admin` | Designer — configure brand, generate + copy client URL |
+| `/#/?font=DM+Sans&primary=FF6B6B&secondary=00C9A7&client=Acme+Corp` | Client — the full preference form |
 
-## Expanding the ESLint configuration
+If any URL param is missing the client sees a friendly error screen, not a broken UI.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Local development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev        # http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Admin page: `http://localhost:5173/#/admin`  
+Client form: `http://localhost:5173/#/?font=DM+Sans&primary=FF6B6B&secondary=00C9A7&client=Test`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## EmailJS setup
+
+Before the submit button does anything real, fill in three constants in `src/config/emailjs.ts`:
+
+```ts
+export const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID'
+export const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'
+export const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY'
+```
+
+Get these from [emailjs.com](https://www.emailjs.com/) → Email Services + Email Templates. Until filled, the submit button surfaces the error UI with a "Copy responses" fallback.
+
+---
+
+## Deploy to GitHub Pages
+
+```bash
+npm run deploy
+```
+
+This runs `npm run build` then `gh-pages -d dist`. Push the `gh-pages` branch to GitHub and enable Pages in repo settings.
+
+Two things that make it work on GitHub Pages:
+- `vite.config.ts` sets `base: './'` so assets resolve from any subdirectory.
+- `public/404.html` redirects unknown paths back to `index.html` (SPA shim).
+
+---
+
+## The 15 steps
+
+1. **Welcome** — language picker (English / Español), sets i18n for all following steps
+2. **Brand personality** — 8 visual mood-board cards, pick exactly 2
+3. **Corner radius** — sharp / soft / rounded / pill, shown as live card + button previews
+4. **Shadow depth** — flat / subtle / medium / dramatic, shown as live card previews
+5. **Button style** — solid / outlined / ghost / solid+icon, interactive hover demos
+6. **Layout density** — slider from spacious → balanced → dense with live spacing preview
+7. **Hero section** — full-screen photo / video / typography / illustrated / split layout
+8. **Imagery style** — photography / illustration / 3D-abstract / icon-heavy / mixed
+9. **Navigation** — top bar / hamburger / mega menu / sticky sidebar
+10. **Animation level** — none / subtle / moderate / dynamic (preview performs the animation on tap)
+11. **Color mode** — light / dark / you decide (split-screen mini-page preview)
+12. **Sites you love** — up to 3 URLs, optional
+13. **Sites you dislike** — up to 3 URLs, optional
+14. **Additional notes** — free-form textarea, optional
+15. **Review + submit** — scrollable summary, ✏ edit buttons jump back to any step, EmailJS send
+
+---
+
+## Brand injection model
+
+When the client opens their URL, `src/hooks/useBrandStyles.ts` reads the query params and sets four CSS custom properties on `:root`:
+
+| Variable | Source |
+|----------|--------|
+| `--color-primary` | `primary` param (hex) |
+| `--color-secondary` | `secondary` param (hex) |
+| `--color-primary-light` | derived — 10% opacity rgba |
+| `--color-primary-dark` | derived — HSL lightness −20% |
+| `--font-brand` | `font` param, loaded from Google Fonts |
+
+Every question card, button, and preview uses these variables. The form's structural chrome (progress bar, back/next nav, step counter) uses Helium's design system — warm off-white background, DM Sans, DM Mono for labels — so the client brand pops rather than competes.
+
+---
+
+## i18n
+
+All strings live in `src/data/translations.ts` as two complete objects: `en` and `es`. A floating 🌐 toggle lets clients switch at any point. If you add a key to one language, add it to both — the `Translations` interface enforces the shape at build time.
+
+---
+
+## Tech stack
+
+- **React 19** + **Vite** + **TypeScript**
+- **Tailwind CSS v3** — utility classes + CSS custom properties for brand injection
+- **Framer Motion** — step transitions, animation-level demo, success screen
+- **react-router-dom v7** — HashRouter (`/#/admin` vs `/#/`)
+- **@emailjs/browser** — client-side email without a backend
+
+---
+
+## Project structure
+
+```
+src/
+├── components/    # ProgressBar, StepContainer, LanguageToggle, SelectableCard,
+│                  # ColorPicker, FontPicker, LivePreview
+├── config/        # emailjs.ts — fill before deploy
+├── context/       # LanguageContext, FormContext
+├── data/          # translations.ts — complete EN + ES
+├── hooks/         # useUrlParams, useBrandStyles
+├── pages/         # AdminPage, ClientForm (step orchestrator)
+├── steps/         # one file per step (WelcomeStep → ReviewStep)
+└── utils/         # email.ts — sendFormEmail, answersToText
 ```
