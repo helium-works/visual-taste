@@ -11,6 +11,7 @@ Two sides: the **designer** configures a client's brand and generates a shareabl
 | URL | Who uses it |
 |-----|-------------|
 | `/#/admin` | Designer — configure brand, generate + copy client URL |
+| `/#/admin/prompt` | Designer — paste returned questionnaire + wireframe HTML → copy Claude design brief |
 | `/#/?font=DM+Sans&primary=FF6B6B&secondary=00C9A7&client=Acme+Corp` | Client — the full preference form |
 
 If any URL param is missing the client sees a friendly error screen, not a broken UI.
@@ -31,19 +32,27 @@ Client form: `http://localhost:5173/#/?font=DM+Sans&primary=FF6B6B&secondary=00C
 
 ## EmailJS setup
 
-Before the submit button does anything real, fill in three constants in `src/config/emailjs.ts`:
+Keys live in `.env.local` (gitignored). Copy the template and fill in your values:
 
-```ts
-export const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID'
-export const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'
-export const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY'
+```bash
+cp .env.example .env.local
 ```
 
-Get these from [emailjs.com](https://www.emailjs.com/) → Email Services + Email Templates. Until filled, the submit button surfaces the error UI with a "Copy responses" fallback.
+```ini
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
+```
+
+Get these from [emailjs.com](https://www.emailjs.com/) → Email Services + Email Templates. Until set, the submit button surfaces the error UI with a "Copy responses" clipboard fallback.
+
+**Never commit real keys** to `src/config/emailjs.ts` or anywhere in the repo — that file now only reads from `import.meta.env.VITE_*`.
 
 ---
 
 ## Deploy to GitHub Pages
+
+Make sure `.env.local` exists with valid keys first — Vite bakes them into the bundle at build time.
 
 ```bash
 npm run deploy
@@ -115,11 +124,13 @@ All strings live in `src/data/translations.ts` as two complete objects: `en` and
 src/
 ├── components/    # ProgressBar, StepContainer, LanguageToggle, SelectableCard,
 │                  # ColorPicker, FontPicker, LivePreview
-├── config/        # emailjs.ts — fill before deploy
+├── config/        # emailjs.ts — reads from VITE_* env vars (never hardcode here)
 ├── context/       # LanguageContext, FormContext
-├── data/          # translations.ts — complete EN + ES
+├── data/          # translations.ts (EN + ES), promptDescriptors.ts (design descriptor tables)
 ├── hooks/         # useUrlParams, useBrandStyles
-├── pages/         # AdminPage, ClientForm (step orchestrator)
+├── pages/         # AdminPage, ClientForm, PromptGeneratorPage
 ├── steps/         # one file per step (WelcomeStep → ReviewStep)
-└── utils/         # email.ts — sendFormEmail, answersToText
+└── utils/         # email.ts, parseAnswersText.ts, buildDesignPrompt.ts, color.ts
 ```
+
+See `CLAUDE.md` for a deeper architecture reference.
